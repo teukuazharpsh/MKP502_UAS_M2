@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Dobot Magician - Continuous Jog Controller</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-title">
+        <h1>DOBOT MAGICIAN</h1>
+        <p class="subtitle">Continuous Jog Controller | Smartphone V2</p>
+      </div>
+      <div class="header-status">
+        <span id="tcpBadge" class="badge badge-tcp-off" title="Status TCP Bridge ke dobot_tcp_receiver.py">TCP: OFFLINE</span>
+        <span id="connBadge" class="badge badge-disconnected">DISCONNECTED</span>
+      </div>
+    </header>
+
+    <!-- POSISI ROBOT -->
+    <section class="card pose-card">
+      <h2 class="card-title">POSISI ROBOT</h2>
+      <div class="pose-grid">
+        <div class="pose-item">
+          <span class="pose-axis">X</span>
+          <span id="posX" class="pose-value">---</span>
+          <span class="pose-unit">mm</span>
+        </div>
+        <div class="pose-item">
+          <span class="pose-axis">Y</span>
+          <span id="posY" class="pose-value">---</span>
+          <span class="pose-unit">mm</span>
+        </div>
+        <div class="pose-item">
+          <span class="pose-axis">Z</span>
+          <span id="posZ" class="pose-value">---</span>
+          <span class="pose-unit">mm</span>
+        </div>
+        <div class="pose-item">
+          <span class="pose-axis">R</span>
+          <span id="posR" class="pose-value">---</span>
+          <span class="pose-unit">degree</span>
+        </div>
+      </div>
+      <p id="poseStatusText" class="status-text">Menunggu koneksi ke robot...</p>
+    </section>
+
+    <!-- MAIN GRID: CONTINUOUS JOG + KONTROL & KECEPATAN -->
+    <div class="main-grid">
+      <!-- CONTINUOUS JOG -->
+      <section class="card jog-card">
+        <h2 class="card-title">CONTINUOUS JOG</h2>
+
+        <div class="jog-pad">
+          <div class="jog-empty"></div>
+          <button type="button" class="btn btn-jog" data-dir="X+">
+            <span class="jog-icon">&#8593;</span>
+            <span class="jog-label">X+</span>
+          </button>
+          <div class="jog-empty"></div>
+
+          <button type="button" class="btn btn-jog" data-dir="Y+">
+            <span class="jog-icon">&#8592;</span>
+            <span class="jog-label">Y+</span>
+          </button>
+          <button type="button" id="btnStopCenter" class="btn btn-jog btn-stop-center">
+            <span class="jog-icon">&#9632;</span>
+            <span class="jog-label">STOP</span>
+          </button>
+          <button type="button" class="btn btn-jog" data-dir="Y-">
+            <span class="jog-icon">&#8594;</span>
+            <span class="jog-label">Y-</span>
+          </button>
+
+          <div class="jog-empty"></div>
+          <button type="button" class="btn btn-jog" data-dir="X-">
+            <span class="jog-icon">&#8595;</span>
+            <span class="jog-label">X-</span>
+          </button>
+          <div class="jog-empty"></div>
+        </div>
+
+        <div class="jog-z-row">
+          <button type="button" class="btn btn-jog btn-jog-z" data-dir="Z+">
+            <span class="jog-icon">Q</span>
+            <span class="jog-label">Z+</span>
+          </button>
+          <button type="button" class="btn btn-jog btn-jog-z" data-dir="Z-">
+            <span class="jog-icon">E</span>
+            <span class="jog-label">Z-</span>
+          </button>
+        </div>
+
+        <div class="jog-help">
+          <p>Tekan dan tahan tombol untuk bergerak.</p>
+          <p>Lepaskan tombol untuk berhenti.</p>
+          <p class="jog-note">JOG hanya aktif setelah CONNECT. Gunakan kecepatan rendah dan pastikan area gerak aman.</p>
+        </div>
+      </section>
+
+      <!-- KOLOM KANAN -->
+      <div class="side-column">
+        <!-- KONTROL -->
+        <section class="card control-card">
+          <h2 class="card-title">KONTROL</h2>
+          <div class="control-stack">
+            <button type="button" id="btnConnect" class="btn btn-connect">CONNECT</button>
+            <button type="button" id="btnDisconnect" class="btn btn-disconnect">DISCONNECT</button>
+            <button type="button" id="btnHome" class="btn btn-control">HOME</button>
+            <button type="button" id="btnStop" class="btn btn-control">STOP</button>
+            <button type="button" id="btnSuctionOn" class="btn btn-control">SUCTION ON</button>
+            <button type="button" id="btnSuctionOff" class="btn btn-control">SUCTION OFF</button>
+          </div>
+          <p class="safety-note">Pastikan area kerja aman. STOP software bukan pengganti E-Stop fisik.</p>
+          <p id="controlStatusText" class="status-text">Siap menerima perintah.</p>
+        </section>
+
+        <!-- KECEPATAN JOG -->
+        <section class="card speed-card">
+          <h2 class="card-title">KECEPATAN JOG (mm/s)</h2>
+          <div class="speed-form">
+            <label class="speed-row" for="speedX">
+              <span>X Speed</span>
+              <input type="number" id="speedX" min="1" max="100" step="1" value="5" />
+            </label>
+            <label class="speed-row" for="speedY">
+              <span>Y Speed</span>
+              <input type="number" id="speedY" min="1" max="100" step="1" value="5" />
+            </label>
+            <label class="speed-row" for="speedZ">
+              <span>Z Speed</span>
+              <input type="number" id="speedZ" min="1" max="100" step="1" value="5" />
+            </label>
+            <button type="button" id="btnApplySpeed" class="btn btn-control btn-apply">APPLY SPEED</button>
+          </div>
+          <p class="safety-note">Rentang awal 1&ndash;20 mm/s. Nilai awal 5 mm/s.</p>
+        </section>
+      </div>
+    </div>
+
+    <!-- PANEL TAMBAHAN: INPUT TARGET POSISI X, Y, Z, R + HOMING + SUCTION -->
+    <section class="card target-card">
+      <div class="target-header">
+        <h2 class="card-title">INPUT TARGET POSISI (X, Y, Z, R) &amp; KONTROL CEPAT</h2>
+        <span class="limit-hint">Limit Aman: X [150..300] | Y [-150..150] | Z [-50..150] mm | R [-135..135]&deg;</span>
+      </div>
+
+      <div class="target-inputs">
+        <label class="target-field" for="targetX">
+          <span>Target X (mm)</span>
+          <input type="number" id="targetX" min="150" max="300" step="0.5" value="225" />
+        </label>
+        <label class="target-field" for="targetY">
+          <span>Target Y (mm)</span>
+          <input type="number" id="targetY" min="-150" max="150" step="0.5" value="0" />
+        </label>
+        <label class="target-field" for="targetZ">
+          <span>Target Z (mm)</span>
+          <input type="number" id="targetZ" min="-50" max="150" step="0.5" value="50" />
+        </label>
+        <label class="target-field" for="targetR">
+          <span>Target R (deg)</span>
+          <input type="number" id="targetR" min="-135" max="135" step="1" value="0" />
+        </label>
+      </div>
+
+      <div class="target-actions">
+        <button type="button" id="btnMoveXYZR" class="btn btn-primary">MOVE TO XYZR</button>
+        <button type="button" id="btnUseCurrentPose" class="btn btn-control">AMBIL POSISI SAAT INI</button>
+        <button type="button" id="btnQuickHome" class="btn btn-control">HOME</button>
+        <button type="button" id="btnQuickSuctionOn" class="btn btn-control">SUCTION ON</button>
+        <button type="button" id="btnQuickSuctionOff" class="btn btn-control">SUCTION OFF</button>
+      </div>
+      <p id="targetStatusText" class="status-text">Masukkan koordinat target X, Y, Z, R lalu tekan MOVE TO XYZR.</p>
+    </section>
+
+    <footer class="footer">
+      <p>DOBOT SMARTPHONE CONTROLLER V2</p>
+      <p>Continuous Jog Monitoring Interface</p>
+    </footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
+
