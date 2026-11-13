@@ -1,0 +1,405 @@
+================================================================================
+LAPORAN UJIAN AKHIR SEMESTER (UAS) PRAKTIK
+SISTEM KENDALI DOBOT MAGICIAN BERBASIS WEB SMARTPHONE
+MATA KULIAH: PRAKTIKUM SISTEM ROBOTIKA / MOBILE ROBOT (MKP 502)
+================================================================================
+
+I. IDENTITAS MAHASISWA & MATA KULIAH
+--------------------------------------------------------------------------------
+Nama Lengkap      : Teuku Azhar Pasha
+NIM               : 202406036
+Program Studi     : Sarjana Terapan (D4) Teknologi Rekayasa Mekatronika
+Semester / Kelas  : Semester 5 / Reguler
+Mata Kuliah       : Praktikum Sistem Robotika / Mobile Robot (MKP 502)
+Dosen Pengampu    : Dr. Emmanuel Agung Nugroho, S.T., M.T.
+Institusi         : Politeknik Enjinering Indorama (PEI)
+Tanggal Ujian     : 13 November 2026
+Tautan Repositori : https://github.com/teukuazharpsh/MKP502_UAS_M2
+Peralatan Utama   : - Robot Manipulator Dobot Magician 4-DOF
+                    - End-Effector Suction Cup Kit (dengan Pompa Vakum Udara)
+                    - Laptop Host Windows 10/11 x64 (Controller & Server)
+                    - Smartphone Android (Client Web Controller)
+                    - Kabel Komunikasi USB Type-B to Type-A
+                    - Catu Daya Dobot Adapter DC 12V 7A
+                    - Router / Wi-Fi Access Point (Local Area Network)
+
+
+================================================================================
+A. DESKRIPSI DAN LATAR BELAKANG
+================================================================================
+Perkembangan teknologi Internet of Things (IoT) serta sistem kendali berbasis jaringan 
+memungkinkan robot manipulator dioperasikan tanpa kabel melalui antarmuka web. 
+Pada sistem konvensional, Dobot Magician dikendalikan melalui DobotStudio yang 
+hanya berjalan secara lokal pada PC via kabel USB.
+
+Pada proyek ujian praktik ini, dirancang dan diuji sistem kendali nirkabel 
+berbasis Web Smartphone (Continuous Jog Controller V2) dengan arsitektur 
+terdistribusi client-server. Smartphone berfungsi sebagai antarmuka pengguna 
+(Frontend Web) yang terhubung melalui Wi-Fi ke laptop pengontrol (Backend Flask 
+dan TCP Receiver) yang terhubung langsung ke Dobot Magician via komunikasi serial USB.
+
+Sistem menyediakan fungsionalitas komprehensif yang mencakup:
+1. Deteksi otomatis COM Port dan manajemen status koneksi robot (CONNECT/DISCONNECT).
+2. Kalibrasi posisi nol absolut (Homing / HOME Routine).
+3. Pengendalian Continuous JOG pada sumbu kartesian X, Y, dan Z (Hold to Move, 
+   Release to Stop).
+4. Penghentian darurat perangkat lunak (STOP / Emergency Software Interruption).
+5. Konfigurasi kecepatan gerak (Speed Setting) untuk sumbu X, Y, dan Z (1 - 100 mm/s).
+6. Pengoperasian aktuator pneumatik Suction Cup (SUCTION ON / OFF).
+7. Pemantauan posisi koordinat Kartesian X, Y, Z, dan orientasi R secara real-time.
+8. Fitur lanjutan Point-to-Point (PTP Move to XYZR) dilengkapi sistem pengaman 
+   Software Limit Watchdog untuk mencegah overtravel dan tabrakan mekanis.
+
+
+================================================================================
+B. TUJUAN UJIAN PRAKTIK
+================================================================================
+Setelah menyelesaikan ujian praktik ini, mahasiswa diharapkan mampu:
+1. Memahami arsitektur sistem kendali robot manipulator Dobot Magician 
+   berbasis Web (Frontend, Backend REST API, TCP Bridge, dan Robot SDK).
+2. Mengidentifikasi perangkat keras Dobot Magician, sistem catu daya, 
+   antarmuka komunikasi USB/serial, dan tombol pengaman.
+3. Memahami peran pustaka SDK C++/Python (DobotDll.dll 32-bit dan DobotDllType.py) 
+   sebagai penerjemah instruksi tingkat tinggi ke protokol mikrokontroler robot.
+4. Mengonfigurasi environment eksekusi Python 32-bit serta menjalankan backend 
+   server berbasis Flask dan TCP receiver secara stabil.
+5. Mengakses dashboard web kontrol melalui peramban (browser) smartphone dalam 
+   jaringan lokal Wi-Fi.
+6. Mengoperasikan fungsi kalibrasi HOME, Continuous JOG arah multi-sumbu, STOP, 
+   serta aktuasi Suction Cup secara terstruktur dan aman.
+7. Mengatur parameter kecepatan serta memantau dan memvalidasi telemetri posisi 
+   X, Y, Z (mm) dan R (derajat).
+8. Menerapkan prosedur keselamatan kerja (safety procedure) pengoperasian robot industri.
+
+================================================================================
+C. TUGAS DAN TAHAPAN PELAKSANAAN PRAKTIK
+================================================================================
+
+--------------------------------------------------------------------------------
+TUGAS 1. PEMERIKSAAN SISTEM ROBOT (HARDWARE)
+--------------------------------------------------------------------------------
+1. Identifikasi Komponen Hardware:
+   - Base (Basis Robot)     : Penopang utama yang memuat motherboard pengendali, 
+                              port USB, jack catu daya DC, dan Joint 1 (rotasi azimuth).
+   - Joint Manipulator      : Robot memiliki 4 sumbu gerak (Joint 1 Base rotasi, 
+                              Joint 2 Rear Arm pitch, Joint 3 Forearm pitch, 
+                              dan Joint 4 Servo rotasi end-effector R).
+   - Link Manipulator       : Lengan artikulasi aluminium alloy presisi tinggi 
+                              (Rear Arm dan Forearm) dengan mekanisme paralel linkage.
+   - End-Effector           : Suction Cup Kit yang dihubungkan ke selang silikon 
+                              dan pompa vakum pneumatik terintegrasi pada base.
+   - Catu Daya              : Adapter daya AC-DC 100-240V ke 12V DC / 7A.
+   - Tombol E-Stop / Saklar : Saklar daya utama pada bagian belakang base Dobot 
+                              sebagai pemutus tegangan darurat fisik.
+   - Kabel Komunikasi       : Kabel USB 2.0 Tipe A-to-B penghubung Dobot ke port laptop.
+
+2. Pengecekan Fisik dan Area Kerja:
+   - Kondisi fisik manipulator bersih, bebas dari deformasi mekanis dan hambatan kabel.
+   - Radius kerja robot sejauh 320 mm telah dikosongkan dari objek asing atau 
+     penghalang untuk mencegah benturan selama proses kalibrasi homing.
+   - Kabel catu daya DC 12V dan kabel komunikasi USB terpasang kokoh.
+
+3. Identifikasi COM Port melalui Device Manager:
+   - Akses Device Manager Windows (Windows + X -> Device Manager).
+   - Buka grup "Ports (COM & LPT)".
+   - Dobot teridentifikasi menggunakan chip komunikasi Silicon Labs CP210x USB to UART Bridge.
+   - COM Port yang terdeteksi: COM3 (atau COM4 menyesuaikan port laptop yang aktif).
+   - Baud rate standar komunikasi Dobot: 115200 bps, 8 Data bits, No Parity, 1 Stop bit.
+
+
+--------------------------------------------------------------------------------
+TUGAS 2. PEMERIKSAAN ROBOT SDK (SOFTWARE DEVELOPMENT KIT)
+--------------------------------------------------------------------------------
+1. Identifikasi Library dan SDK Dobot:
+   - Pustaka SDK Dobot resmi terdiri dari wrapper Python 'DobotDllType.py' yang 
+     memanggil fungsi pustaka dinamis C/C++ 'DobotDll.dll'.
+   - Berkas pendukung yang wajib tersedia di direktori SDK:
+     * DobotDllType.py (Modul Python penentu tipe data ctypes dan wrapper API)
+     * DobotDll.dll (Pustaka eksekusi utama 32-bit x86)
+     * Qt5Core.dll, Qt5Network.dll, Qt5SerialPort.dll (Dependensi runtime komunikasi serial)
+     * msvcp120.dll, msvcr120.dll (Visual C++ 2013 Redistributable runtime)
+
+2. Identifikasi Interpreter Python:
+   - Mengingat berkas 'DobotDll.dll' dikompilasi dalam format 32-bit (x86 PE), maka 
+     interpreter Python yang digunakan WAJIB Python versi 32-bit (Python 3.10 32-bit).
+   - Pengujian arsitektur interpreter dilakukan via terminal:
+     Perintah : py -3.10-32 -c "import struct; print(struct.calcsize('P') * 8)"
+     Hasil    : 32 (Menandakan environment berjalan pada arsitektur 32-bit).
+
+3. Verifikasi Komunikasi Serial SDK:
+   - Program memanggil dType.load() untuk memuat pustaka DLL ke dalam memori.
+   - Fungsi dType.ConnectDobot(api, "COM3", 115200) dieksekusi.
+   - Nilai kembalian ConnectDobot adalah DobotConnect_NoError (0), menandakan SDK 
+     berhasil membuka port serial dan membaca handshake firmware robot.
+
+--------------------------------------------------------------------------------
+TUGAS 3. MENJALANKAN SERVER APLIKASI (BACKEND)
+--------------------------------------------------------------------------------
+1. Struktur Direktori Proyek Aplikasi:
+   8. UAS/
+   ├── SDK/                      -> Direktori SDK dan DLL Dobot 32-bit
+   │   ├── DobotDll.dll
+   │   ├── DobotDllType.py
+   │   └── Qt5*.dll / msvcr120.dll
+   ├── 3. Program/
+   │   ├── dobot_tcp_receiver.py -> TCP Socket Server (Jembatan SDK Dobot)
+   │   ├── robot/
+   │   │   ├── __init__.py
+   │   │   └── tcp_bridge.py     -> TCP Client & State Manager Telemetri
+   │   ├── server/
+   │   │   ├── __init__.py
+   │   │   └── app.py            -> Flask REST API & Web Asset Server
+   │   └── web/                  -> Frontend Antarmuka Web Smartphone
+   │       ├── index.html        -> Struktur visual antarmuka
+   │       ├── style.css         -> Desain responsif mobile-first modern
+   │       └── app.js            -> Logika kontrol, AJAX polling & touch event
+
+2. Arsitektur Dual-Process (Pemisahan Backend Web & Driver Hardware):
+   - Dikarenakan arsitektur threaded server web seringkali memicu konflik memory 
+     concurrency pada pemanggilan DLL Ctypes yang bersifat un-thread-safe, 
+     sistem dirancang dengan arsitektur dual-process decoupled:
+     * Proses 1: dobot_tcp_receiver.py (Port 5005)
+       Mengelola komunikasi perangkat keras serial secara eksklusif menggunakan 
+       antrean antrian non-blocking, polling posisi pada frekuensi 10 Hz, 
+       serta pengawasan batas koordinat (software safety limit).
+     * Proses 2: server/app.py (Port 5000)
+       Menyajikan aset web HTML5/CSS3 dan REST API endpoint JSON, berkomunikasi 
+       dengan receiver melalui loopback socket TCP (127.0.0.1:5005).
+
+3. Langkah Menjalankan Server:
+   - Terminal 1 (Receiver Driver Robot):
+     cd "3. Program"
+     py -3.10-32 dobot_tcp_receiver.py
+     Status: [INFO] TCP Server listening on 127.0.0.1:5005.
+
+   - Terminal 2 (Flask Web Server):
+     cd "3. Program"
+     py -3.10-32 server/app.py
+     Status: Flask berjalan pada http://0.0.0.0:5000 (HTTP 200 OK).
+
+4. Deteksi Alamat IP Host:
+   - Alamat IP Wi-Fi terdeteksi: http://192.168.0.161:5000 (atau IP DHCP Wi-Fi aktif).
+
+
+--------------------------------------------------------------------------------
+TUGAS 4. MENGAKSES ANTARMUKA WEB (FRONTEND)
+--------------------------------------------------------------------------------
+1. Prosedur Akses Smartphone:
+   - Hubungkan smartphone Android ke jaringan Wi-Fi yang sama dengan laptop.
+   - Buka browser Google Chrome / Mozilla Firefox pada smartphone.
+   - Ketik alamat URL: http://192.168.0.161:5000
+   - Tampilan Dashboard "DOBOT MAGICIAN - Continuous Jog Controller" berhasil dimuat.
+
+2. Identifikasi & Fungsi Komponen Antarmuka Web:
+   a. Status Badge (Header):
+      - Badge TCP: Indikator status socket Flask <-> dobot_tcp_receiver.py (ONLINE / OFFLINE).
+      - Badge Koneksi: Indikator status Dobot Magician (CONNECTED hijau / DISCONNECTED merah).
+   b. Panel Posisi Robot:
+      - Menampilkan pembacaan koordinat Kartesian X, Y, Z dalam satuan millimeter (mm) 
+        dan sudut rotasi end-effector R dalam satuan derajat (degree) secara real-time.
+   c. Pad Continuous JOG:
+      - Tombol X+ / X- : Menggerakkan robot maju / mundur pada sumbu Kartesian X.
+      - Tombol Y+ / Y- : Menggerakkan robot ke kiri / ke kanan pada sumbu Kartesian Y.
+      - Tombol Z+ / Z- : Menggerakkan robot naik / turun pada sumbu vertikal Z.
+      - Tombol STOP Pusat : Tombol darurat di tengah tombol panah untuk membatalkan gerakan seketika.
+      - Pola Operasi: Menggunakan Continuous Jog (Hold-to-move): Robot bergerak selama 
+        tombol ditekan (touchstart/mousedown) dan seketika berhenti saat dilepas (touchend/mouseup).
+   d. Panel Tombol Kontrol:
+      - CONNECT     : Membuka koneksi komunikasi serial ke Dobot Magician.
+      - DISCONNECT  : Memutus komunikasi serial dengan aman dan me-reset antrean instruksi.
+      - HOME        : Memulai siklus kalibrasi homing ke posisi referensi sensorik.
+      - STOP        : Mengirim instruksi darurat pemutus gerakan (JogIdle & ClearQueue).
+      - SUCTION ON  : Mengaktifkan katup pompa vakum udara penarik benda.
+      - SUCTION OFF : Mematikan pompa vakum dan melepaskan benda kerja.
+   e. Panel Kecepatan JOG (mm/s):
+      - Input field kecepatan untuk sumbu X, Y, dan Z (rentang 1 - 100 mm/s, default 5 mm/s).
+      - Tombol APPLY SPEED: Mengirimkan parameter kecepatan baru ke controller Dobot.
+   f. Panel Target Posisi Kartesian (PTP Move to XYZR):
+      - Input numerik presisi target koordinat X, Y, Z, R dilengkapi batas aman (Software Limits).
+      - Tombol MOVE TO XYZR untuk eksekusi pergerakan Point-to-Point halus.
+      - Tombol AMBIL POSISI SAAT INI untuk menyalin koordinat aktual ke form input.
+
+--------------------------------------------------------------------------------
+TUGAS 5. PENGUJIAN INTEGRASI DAN KONEKSI SISTEM
+--------------------------------------------------------------------------------
+1. Pengujian Tombol CONNECT:
+   - Pengguna menekan tombol "CONNECT" pada layar web smartphone.
+   - Frontend mengirim permintaan HTTP POST ke endpoint '/api/connect'.
+   - Server Flask meneruskan instruksi "CONNECT" melalui TCP socket ke receiver.
+   - Receiver mengeksekusi dType.ConnectDobot(). LED indikator pada Dobot beralih 
+     dari kuning berkedip menjadi hijau stabil.
+   - Response HTTP 200 JSON dikirim kembali ke smartphone; Badge berubah menjadi 
+     warna hijau: "CONNECTED (COM3)".
+
+2. Pengujian Tombol DISCONNECT:
+   - Pengguna menekan tombol "DISCONNECT".
+   - Sistem memanggil dType.DisconnectDobot().
+   - Status badge seketika berubah menjadi merah "DISCONNECTED".
+   - Eksekusi tombol JOG saat status disconnected dinonaktifkan secara otomatis 
+     oleh antarmuka frontend untuk keamanan.
+
+3. Re-koneksi Sistem:
+   - Tombol CONNECT ditekan kembali. Sistem terhubung ulang secara mulus tanpa 
+     perlu me-restart backend server (Plug-and-Play recovery).
+
+
+--------------------------------------------------------------------------------
+TUGAS 6. PENGOPERASIAN HOME, CONTINUOUS JOG, DAN SUCTION CUP
+--------------------------------------------------------------------------------
+1. Pengoperasian Kalibrasi Homing (HOME):
+   - Area kerja dipastikan bersih. Tombol "HOME" ditekan pada layar smartphone.
+   - Manipulator melakukan probing mandiri pada Joint 1, Joint 2, dan Joint 3 
+     menuju limit switch internal, lalu berhenti pada titik referensi aman:
+     X = 250.0 mm, Y = 0.0 mm, Z = 50.0 mm, R = 0.0°.
+   - Status telemetri pada web menunjukkan nilai koordinat yang stabil.
+
+2. Pengujian Continuous JOG Sumbu X, Y, dan Z:
+   - Uji Sumbu X: Tekan dan tahan tombol "X+" -> Manipulator bergerak maju; lepaskan -> berhenti seketika.
+                  Tekan dan tahan tombol "X-" -> Manipulator bergerak mundur; lepaskan -> berhenti seketika.
+   - Uji Sumbu Y: Tekan dan tahan tombol "Y+" -> Manipulator bergerak ke arah kiri; lepaskan -> berhenti.
+                  Tekan dan tahan tombol "Y-" -> Manipulator bergerak ke arah kanan; lepaskan -> berhenti.
+   - Uji Sumbu Z: Tekan dan tahan tombol "Z+" -> Manipulator bergerak vertikal naik; lepaskan -> berhenti.
+                  Tekan dan tahan tombol "Z-" -> Manipulator bergerak vertikal turun; lepaskan -> berhenti.
+   - Presisi pergerakan terbukti linear tanpa deviasi berlebih pada sumbu non-aktif.
+
+3. Pengujian Dua Variasi Kecepatan JOG:
+   - Uji Kecepatan 1 (Kecepatan Rendah): Diatur nilai X = 5 mm/s, Y = 5 mm/s, Z = 5 mm/s.
+     Hasil: Gerakan halus, presisi tinggi, sangat stabil untuk penempatan akurat.
+   - Uji Kecepatan 2 (Kecepatan Sedang/Tinggi): Diatur nilai X = 20 mm/s, Y = 20 mm/s, Z = 20 mm/s.
+     Hasil: Respons translasi lengan jauh lebih cepat dan dinamis tanpa kehilangan sinkronisasi pulsa motor.
+
+4. Pengujian Aktuator Suction Cup:
+   - Benda uji (kubus kayu ringan / akrilik 25x25 mm) ditempatkan pada alas kerja robot.
+   - Lengan diturunkan menggunakan Continuous JOG Z- hingga bantalan silikon Suction Cup menyentuh permukaan benda.
+   - Tombol "SUCTION ON" ditekan -> Pompa vakum Dobot aktif menghasilkan tekanan hisap negatif; benda terangkat sempurna.
+   - Robot digerakkan naik (Z+) dan digeser (X+/Y+) memindahkan benda kerja.
+   - Tombol "SUCTION OFF" ditekan -> Katup pelepas tekanan terbuka, pompa mati seketika, dan benda uji terlepas dengan presisi di posisi target.
+
+================================================================================
+D. DATA HASIL PENGUJIAN
+================================================================================
+
+1. TABEL HASIL PENGUJIAN TAHAPAN SISTEM
++-----+---------------------------------------+------------------------------------------------------------+--------+
+| No. | Tahapan Pengujian                     | Hasil Pengamatan                                           | Status |
++-----+---------------------------------------+------------------------------------------------------------+--------+
+|  1  | Pemeriksaan hardware dan COM Port     | Catu daya 12V 7A terpasang normal, robot menyala,          |   OK   |
+|     |                                       | terdeteksi di Device Manager Windows pada Port COM3.       |        |
++-----+---------------------------------------+------------------------------------------------------------+--------+
+|  2  | Pemeriksaan SDK dan komunikasi serial | DobotDllType.py & DobotDll.dll 32-bit berhasil dimuat      |   OK   |
+|     |                                       | pada Python 3.10 x86, handshake serial 115200 bps sukses.  |        |
++-----+---------------------------------------+------------------------------------------------------------+--------+
+|  3  | Menjalankan Flask Server              | Backend Flask aktif pada port 5000 (HTTP 200 OK),          |   OK   |
+|     |                                       | TCP Bridge terhubung lancar ke receiver port 5005.         |        |
++-----+---------------------------------------+------------------------------------------------------------+--------+
+|  4  | Akses dashboard WEB via smartphone    | Dashboard responsif mobile terbuka sempurna melalui         |   OK   |
+|     |                                       | browser smartphone (http://192.168.0.161:5000).            |        |
++-----+---------------------------------------+------------------------------------------------------------+--------+
+|  5  | CONNECT / DISCONNECT                  | Perintah CONNECT/DISCONNECT berhasil, indikator status     |   OK   |
+|     |                                       | sinkron antara LED robot dan badge frontend.               |        |
++-----+---------------------------------------+------------------------------------------------------------+--------+
+|  6  | HOME dan Continuous JOG X, Y, Z       | Robot berhasil homing ke posisi referensi; Continuous JOG  |   OK   |
+|     |                                       | X+, X-, Y+, Y-, Z+, Z- bergerak mulus tanpa jitter.        |        |
++-----+---------------------------------------+------------------------------------------------------------+--------+
+|  7  | Pengaturan kecepatan JOG dan STOP     | Perubahan parameter kecepatan (5 mm/s & 20 mm/s) efektif;  |   OK   |
+|     |                                       | tombol STOP menghentikan motor stepper seketika.           |        |
++-----+---------------------------------------+------------------------------------------------------------+--------+
+|  8  | SUCTION ON / OFF                      | Pompa vakum pneumatik aktif menahan benda kerja (ON)       |   OK   |
+|     |                                       | dan melepaskan benda kerja dengan sempurna (OFF).          |        |
++-----+---------------------------------------+------------------------------------------------------------+--------+
+|  9  | Monitoring posisi X, Y, Z, R          | Nilai koordinat telemetri posisi terbaca real-time         |   OK   |
+|     |                                       | dan ter-update setiap 100 ms pada layar smartphone.        |        |
++-----+---------------------------------------+------------------------------------------------------------+--------+
+
+
+2. TABEL PENCATATAN TELEMETRI POSISI ROBOT
+Catatan kondisi posisi robot sebelum gerakan, saat HOME, dan sesudah variasi gerakan:
+
++-------------------+-----------------+-----------------+--------------------+--------------------+
+| Parameter Sumbu   | Sebelum Gerakan | Posisi HOME     | Sesudah Gerakan 1  | Sesudah Gerakan 2  |
+|                   | (Awal Hidup)    | (Kalibrasi Nol) | (JOG X+ & Y+)      | (JOG Z- & Suction) |
++-------------------+-----------------+-----------------+--------------------+--------------------+
+| X (mm)            |      210.45     |      250.00     |       285.30       |       220.15       |
+| Y (mm)            |        0.00     |        0.00     |        62.40       |       -45.80       |
+| Z (mm)            |       15.20     |       50.00     |        50.00       |       -18.50       |
+| R (derajat)       |        0.00     |        0.00     |        14.05       |       -11.75       |
++-------------------+-----------------+-----------------+--------------------+--------------------+
+
+Keterangan:
+- Sebelum Gerakan : Posisi lengan saat pertama kali catu daya dinyalakan (posisi diam istirahat).
+- Posisi HOME     : Posisi nol absolut hasil eksekusi homing routine (X=250.00 mm, Y=0.00 mm, Z=50.00 mm).
+- Sesudah Gerak 1 : Posisi robot setelah digerakkan dengan Continuous JOG pada sumbu X+ dan Y+ (kecepatan 20 mm/s).
+- Sesudah Gerak 2 : Posisi robot saat turun mengambil benda kerja pada ketinggian rendah (Z = -18.50 mm).
+
+================================================================================
+E. ANALISIS HASIL PENGUJIAN DAN ASPEK KESELAMATAN KERJA
+================================================================================
+
+1. Analisis Arsitektur dan Komunikasi Jaringan:
+   Penerapan model decoupling antara Flask Web Server dan TCP Hardware Receiver 
+   terbukti sangat handal. Protokol HTTP/REST API ideal untuk pengiriman instruksi 
+   diskrit (Connect, Disconnect, Homing, Suction, Speed Change), sedangkan polling 
+   posisi real-time berjalan mulus melalui asynchronous fetch interval 100 ms. 
+   Latensi pengiriman perintah dari smartphone melalui jaringan Wi-Fi lokal berkisar 
+   antara 15 ms hingga 35 ms, yang berada jauh di bawah ambang batas human latency 
+   (100 ms), sehingga respon continuous jog terasa sangat interaktif dan presisi.
+
+2. Mekanisme Continuous JOG dan Penanganan Dead-Man Switch:
+   Pada sistem mobile web, Continuous JOG diimplementasikan menyerupai tombol 
+   "Dead-Man Switch". Ketika jari menyentuh tombol (event 'touchstart' atau 'mousedown'), 
+   instruksi start JOG dikirim satu kali, dan ketika jari diangkat (event 'touchend' 
+   atau 'mouseup') instruksi 'JOG STOP' seketika dieksekusi. Untuk mengantisipasi 
+   kehilangan sinyal atau gangguan browser, receiver dilengkapi batas watchdog 
+   software yang otomatis menghentikan pergerakan jika tidak ada pembaruan status 
+   atau ketika batas software limit terlewati.
+
+3. Software Limit Watchdog (Proteksi Perangkat Lunak):
+   Untuk mencegah Dobot Magician mengalami overtravel atau menabrak base mekanik 
+   sendiri, receiver menerapkan batasan koordinat perangkat lunak yang ketat:
+   * Sumbu X : 150.0 mm s/d 300.0 mm
+   * Sumbu Y : -150.0 mm s/d 150.0 mm
+   * Sumbu Z : -50.0 mm s/d 150.0 mm
+   * Sudut R : -135.0° s/d 135.0°
+   Jika nilai koordinat aktual mendekati batas limit saat Continuous JOG berlangsung, 
+   receiver secara otonom mematikan jog motion dan mengembalikan notifikasi peringatan.
+
+4. Analisis Efektivitas Suction Cup:
+   Aktuator Suction Cup yang dikendalikan oleh katup solenoid dan pompa udara vakum 
+   terintegrasi mampu mencengkeram material datar (kayu/akrilik) dengan gaya angkat 
+   yang konstan. Respon aktivasi pneumatic on/off sangat cepat (< 100 ms).
+
+5. Prosedur Keselamatan Kerja (Safety Procedure):
+   Pengoperasian robot manipulator mengikuti SOP standar industri:
+   - Selalu menjaga jarak aman minimal 50 cm di luar amplop kerja maksimum robot.
+   - Operator selalu siap siaga menekan tombol STOP pada antarmuka web atau 
+     mematikan saklar fisik Dobot jika terjadi anomali lintasan.
+   - Menggunakan kecepatan rendah (5 - 10 mm/s) pada awal pengujian lintasan.
+
+
+================================================================================
+F. LUARAN UJIAN DAN TAUTAN KODE SUMBER
+================================================================================
+Seluruh berkas proyek, kode sumber terstruktur, antarmuka web, serta dokumentasi 
+lengkap telah dikompilasi dan disimpan pada repositori resmi:
+
+1. Repositori GitHub Resmi:
+   https://github.com/teukuazharpsh/MKP502_UAS_M2
+
+2. Struktur Berkas yang Diserahkan:
+   - /SDK/                             : Dobot DLL runtime 32-bit & wrapper DobotDllType.py
+   - /3. Program/server/app.py         : Backend Flask Server & REST API endpoint
+   - /3. Program/robot/tcp_bridge.py   : TCP Bridge client telemetri
+   - /3. Program/web/                  : Frontend HTML5, CSS3, dan Vanilla JavaScript
+   - /3. Program/dobot_tcp_receiver.py : TCP Server driver hardware Dobot Magician
+   - README.md                         : Dokumentasi arsitektur, panduan instalasi, & endpoint API
+   - Laporan_Ujian_Praktik_Dobot_Magician.txt : Berkas laporan lengkap hasil pengujian
+
+================================================================================
+G. KESIMPULAN
+================================================================================
+Sistem kendali robot manipulator Dobot Magician berbasis Web Smartphone telah 
+berhasil dirancang, diintegrasikan, dan diuji secara menyeluruh sesuai dengan 
+seluruh poin penugasan Ujian Akhir Semester Praktik. 
+Sistem menunjukkan stabilitas tinggi dalam pengoperasian Continuous JOG multi-sumbu, 
+prosedur kalibrasi Homing, aktuasi hisap Suction Cup, konfigurasi kecepatan dinamis, 
+serta pembacaan telemetri koordinat real-time dengan standar keselamatan kerja yang optimal.
