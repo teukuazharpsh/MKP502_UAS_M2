@@ -1,3 +1,9 @@
+--------------------------------------------------------------------------------
+TUGAS 5. PENGUJIAN INTEGRASI DAN KONEKSI SISTEM
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+TUGAS 5. PENGUJIAN INTEGRASI DAN KONEKSI SISTEM
+--------------------------------------------------------------------------------
 ================================================================================
 LAPORAN UJIAN AKHIR SEMESTER (UAS) PRAKTIK
 SISTEM KENDALI DOBOT MAGICIAN BERBASIS WEB SMARTPHONE
@@ -228,9 +234,149 @@ TUGAS 4. MENGAKSES ANTARMUKA WEB (FRONTEND)
       - Tombol MOVE TO XYZR untuk eksekusi pergerakan Point-to-Point halus.
       - Tombol AMBIL POSISI SAAT INI untuk menyalin koordinat aktual ke form input.
 
+
 --------------------------------------------------------------------------------
 TUGAS 5. PENGUJIAN INTEGRASI DAN KONEKSI SISTEM
 --------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+TUGAS 5. PENGUJIAN INTEGRASI DAN KONEKSI SISTEM
+--------------------------------------------------------------------------------
+1. Pengujian Tombol CONNECT:
+   - Pengguna menekan tombol "CONNECT" pada layar web smartphone.
+   - Frontend mengirim permintaan HTTP POST ke endpoint '/api/connect'.
+   - Server Flask meneruskan instruksi "CONNECT" melalui TCP socket ke receiver.
+   - Receiver mengeksekusi dType.ConnectDobot(). LED indikator pada Dobot beralih 
+     dari kuning berkedip menjadi hijau stabil.
+   - Response HTTP 200 JSON dikirim kembali ke smartphone; Badge berubah menjadi 
+     warna hijau: "CONNECTED (COM3)".
+
+2. Pengujian Tombol DISCONNECT:
+   - Pengguna menekan tombol "DISCONNECT".
+   - Sistem memanggil dType.DisconnectDobot().
+   - Status badge seketika berubah menjadi merah "DISCONNECTED".
+   - Eksekusi tombol JOG saat status disconnected dinonaktifkan secara otomatis 
+     oleh antarmuka frontend untuk keamanan.
+
+3. Re-koneksi Sistem:
+   - Tombol CONNECT ditekan kembali. Sistem terhubung ulang secara mulus tanpa 
+     perlu me-restart backend server (Plug-and-Play recovery).
+
+
+--------------------------------------------------------------------------------
+TUGAS 6. PENGOPERASIAN HOME, CONTINUOUS JOG, DAN SUCTION CUP
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+TUGAS 5. PENGUJIAN INTEGRASI DAN KONEKSI SISTEM
+--------------------------------------------------------------------------------
+1. Pengujian Tombol CONNECT:
+   - Pengguna menekan tombol "CONNECT" pada layar web smartphone.
+   - Frontend mengirim permintaan HTTP POST ke endpoint '/api/connect'.
+   - Server Flask meneruskan instruksi "CONNECT" melalui TCP socket ke receiver.
+   - Receiver mengeksekusi dType.ConnectDobot(). LED indikator pada Dobot beralih 
+     dari kuning berkedip menjadi hijau stabil.
+   - Response HTTP 200 JSON dikirim kembali ke smartphone; Badge berubah menjadi 
+     warna hijau: "CONNECTED (COM3)".
+
+2. Pengujian Tombol DISCONNECT:
+   - Pengguna menekan tombol "DISCONNECT".
+   - Sistem memanggil dType.DisconnectDobot().
+   - Status badge seketika berubah menjadi merah "DISCONNECTED".
+   - Eksekusi tombol JOG saat status disconnected dinonaktifkan secara otomatis 
+     oleh antarmuka frontend untuk keamanan.
+
+3. Re-koneksi Sistem:
+   - Tombol CONNECT ditekan kembali. Sistem terhubung ulang secara mulus tanpa 
+     perlu me-restart backend server (Plug-and-Play recovery).
+
+
+--------------------------------------------------------------------------------
+TUGAS 6. PENGOPERASIAN HOME, CONTINUOUS JOG, DAN SUCTION CUP
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+TUGAS 5. PENGUJIAN INTEGRASI DAN KONEKSI SISTEM
+--------------------------------------------------------------------------------
+1. Pengujian Tombol CONNECT:
+   - Pengguna menekan tombol "CONNECT" pada layar web smartphone.
+   - Frontend mengirim permintaan HTTP POST ke endpoint '/api/connect'.
+   - Server Flask meneruskan instruksi "CONNECT" melalui TCP socket ke receiver.
+   - Receiver mengeksekusi dType.ConnectDobot(). LED indikator pada Dobot beralih 
+     dari kuning berkedip menjadi hijau stabil.
+   - Response HTTP 200 JSON dikirim kembali ke smartphone; Badge berubah menjadi 
+     warna hijau: "CONNECTED (COM3)".
+
+2. Pengujian Tombol DISCONNECT:
+   - Pengguna menekan tombol "DISCONNECT".
+   - Sistem memanggil dType.DisconnectDobot().
+   - Status badge seketika berubah menjadi merah "DISCONNECTED".
+   - Eksekusi tombol JOG saat status disconnected dinonaktifkan secara otomatis 
+     oleh antarmuka frontend untuk keamanan.
+
+3. Re-koneksi Sistem:
+   - Tombol CONNECT ditekan kembali. Sistem terhubung ulang secara mulus tanpa 
+     perlu me-restart backend server (Plug-and-Play recovery).
+
+
+--------------------------------------------------------------------------------
+TUGAS 6. PENGOPERASIAN HOME, CONTINUOUS JOG, DAN SUCTION CUP
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+TUGAS 5. PENGUJIAN INTEGRASI DAN KONEKSI SISTEM
+--------------------------------------------------------------------------------
+1. Pengujian Tombol CONNECT:
+   - Pengguna menekan tombol "CONNECT" pada layar web smartphone.
+   - Frontend mengirim permintaan HTTP POST ke endpoint '/api/connect'.
+   - Server Flask meneruskan instruksi "CONNECT" melalui TCP socket ke receiver.
+   - Receiver mengeksekusi dType.ConnectDobot(). LED indikator pada Dobot beralih 
+     dari kuning berkedip menjadi hijau stabil.
+   - Response HTTP 200 JSON dikirim kembali ke smartphone; Badge berubah menjadi 
+     warna hijau: "CONNECTED (COM3)".
+
+2. Pengujian Tombol DISCONNECT:
+   - Pengguna menekan tombol "DISCONNECT".
+   - Sistem memanggil dType.DisconnectDobot().
+   - Status badge seketika berubah menjadi merah "DISCONNECTED".
+   - Eksekusi tombol JOG saat status disconnected dinonaktifkan secara otomatis 
+     oleh antarmuka frontend untuk keamanan.
+
+3. Re-koneksi Sistem:
+   - Tombol CONNECT ditekan kembali. Sistem terhubung ulang secara mulus tanpa 
+     perlu me-restart backend server (Plug-and-Play recovery).
+
+
+--------------------------------------------------------------------------------
+TUGAS 6. PENGOPERASIAN HOME, CONTINUOUS JOG, DAN SUCTION CUP
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+TUGAS 5. PENGUJIAN INTEGRASI DAN KONEKSI SISTEM
+--------------------------------------------------------------------------------
+1. Pengujian Tombol CONNECT:
+   - Pengguna menekan tombol "CONNECT" pada layar web smartphone.
+   - Frontend mengirim permintaan HTTP POST ke endpoint '/api/connect'.
+   - Server Flask meneruskan instruksi "CONNECT" melalui TCP socket ke receiver.
+   - Receiver mengeksekusi dType.ConnectDobot(). LED indikator pada Dobot beralih 
+     dari kuning berkedip menjadi hijau stabil.
+   - Response HTTP 200 JSON dikirim kembali ke smartphone; Badge berubah menjadi 
+     warna hijau: "CONNECTED (COM3)".
+
+2. Pengujian Tombol DISCONNECT:
+   - Pengguna menekan tombol "DISCONNECT".
+   - Sistem memanggil dType.DisconnectDobot().
+   - Status badge seketika berubah menjadi merah "DISCONNECTED".
+   - Eksekusi tombol JOG saat status disconnected dinonaktifkan secara otomatis 
+     oleh antarmuka frontend untuk keamanan.
+
+3. Re-koneksi Sistem:
+   - Tombol CONNECT ditekan kembali. Sistem terhubung ulang secara mulus tanpa 
+     perlu me-restart backend server (Plug-and-Play recovery).
+
+
+--------------------------------------------------------------------------------
+TUGAS 6. PENGOPERASIAN HOME, CONTINUOUS JOG, DAN SUCTION CUP
+--------------------------------------------------------------------------------
+
+1. Pengujian Tombol CONNECT:
+
+1. Pengujian Tombol CONNECT:
 1. Pengujian Tombol CONNECT:
 
 
