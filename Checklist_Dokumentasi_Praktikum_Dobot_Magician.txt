@@ -1,0 +1,122 @@
+﻿CHECKLIST DOKUMENTASI FOTO DAN VIDEO PRAKTIKUM DOBOT MAGICIAN
+Laporan UAS: Sistem Kendali Dobot Magician Berbasis Web Smartphone
+
+TUJUAN
+Daftar bukti visual yang dikumpulkan saat praktikum dan dipilih untuk laporan UAS. Ambil bukti asli; jangan merekayasa tampilan atau hasil pengujian.
+
+PETUNJUK PENGAMBILAN
+- Simpan berkas asli; jangan hanya menyimpan hasil kompresi aplikasi chat.
+- Pastikan tulisan terminal, URL browser, indikator robot, dan hasil gerak terbaca.
+- Hindari menampilkan kata sandi, token Cloudflare, email pribadi, atau data sensitif.
+- Rekam video proses utuh: kondisi awal, aksi, respons, dan hasil.
+- Gunakan kamera stabil dan pencahayaan cukup; pastikan area kerja terlihat.
+- Catat tanggal, tugas, dan keterangan singkat tiap bukti.
+- Buat salinan cadangan sebelum memasukkan bukti ke laporan.
+
+FORMAT NAMA BERKAS
+Foto : FOTO_TXX_NN_keterangan.jpg
+Video: VIDEO_TXX_NN_keterangan.mp4
+Contoh: FOTO_T01_01_tampak-depan-dobot.jpg
+        VIDEO_T06_01_uji-jog-sumbu-x.mp4
+
+CHECKLIST BUKTI
+
+TUGAS 1 — PEMERIKSAAN HARDWARE ROBOT
+[ ] FOTO_T01_01 — Tampak keseluruhan Dobot Magician dan area kerja.
+[ ] FOTO_T01_02 — Detail lengan robot dan end-effector/suction cup.
+[ ] FOTO_T01_03 — Catu daya dan sambungan kabel relevan; rapikan kabel.
+[ ] FOTO_T01_04 — Device Manager Windows menunjukkan Dobot pada COM3.
+[ ] VIDEO_T01_01 — Robot menyala dan indikator perangkat terlihat.
+Tempat di laporan: Tugas 1; identifikasi hardware dan pemeriksaan COM port.
+
+TUGAS 2 — PEMERIKSAAN SDK
+[ ] FOTO_T02_01 — Struktur folder SDK/library Dobot yang digunakan.
+[ ] FOTO_T02_02 — Terminal menampilkan Python 32-bit dan/atau pemeriksaan SDK berhasil.
+[ ] FOTO_T02_03 — DobotDllType.py dan DobotDll.dll tersedia di proyek.
+[ ] VIDEO_T02_01 — Demonstrasi koneksi SDK, jika dilakukan.
+Tempat di laporan: Tugas 2; identifikasi SDK dan kompatibilitas Python/DLL.
+Catatan: Jangan tampilkan konfigurasi yang memuat kredensial atau data sensitif.
+
+TUGAS 3 — MENJALANKAN SERVER BACKEND
+[ ] FOTO_T03_01 — Terminal receiver aktif dan status TCP server port 5005.
+[ ] FOTO_T03_02 — Terminal Flask aktif pada port 5000 tanpa error.
+[ ] FOTO_T03_03 — Respons HTTP 200 atau halaman terbuka dari host lokal.
+[ ] VIDEO_T03_01 — Jalankan receiver dan Flask; tunjukkan keduanya aktif.
+Tempat di laporan: Tugas 3; prosedur menjalankan receiver dan Flask.
+
+TUGAS 4 — AKSES ANTARMUKA WEB
+[ ] FOTO_T04_01 — Dashboard dibuka dari smartphone melalui Wi-Fi lokal.
+[ ] FOTO_T04_02 — Dashboard dibuka melalui https://dobot.teukuazharpasha.my.id.
+[ ] FOTO_T04_03 — Bilah alamat menunjukkan hostname publik dan HTTPS.
+[ ] VIDEO_T04_01 — Akses dashboard melalui internet dari perangkat di luar Wi-Fi laptop, jika tersedia.
+[ ] FOTO_T04_04 — Dashboard menunjukkan status koneksi, posisi, dan kontrol utama.
+Tempat di laporan: Tugas 4; akses lokal, Cloudflare Tunnel, dan antarmuka web.
+Catatan: Jangan tampilkan token tunnel atau pengaturan akun Cloudflare.
+
+TUGAS 5 — PENGUJIAN INTEGRASI DAN KONEKSI
+[ ] VIDEO_T05_01 — Tekan CONNECT dan tunjukkan status Dobot terhubung.
+[ ] FOTO_T05_01 — Status CONNECTED pada dashboard dan indikator robot.
+[ ] VIDEO_T05_02 — Tekan DISCONNECT dan tunjukkan status DISCONNECTED.
+[ ] VIDEO_T05_03 — Hubungkan kembali tanpa restart backend, jika diuji.
+[ ] FOTO_T05_02 — Status TCP/backend dan status Dobot di dashboard.
+Tempat di laporan: Tugas 5; CONNECT, DISCONNECT, dan pemulihan koneksi.
+
+TUGAS 6 — HOME, CONTINUOUS JOG, DAN SUCTION CUP
+[ ] VIDEO_T06_01 — Proses HOME hingga robot mencapai posisi referensi.
+[ ] FOTO_T06_01 — Koordinat setelah HOME, bila angka dapat dibaca jelas.
+[ ] VIDEO_T06_02 — Continuous JOG X+ dan X-; terlihat gerak berhenti saat tombol dilepas.
+[ ] VIDEO_T06_03 — Continuous JOG Y+ dan Y-; terlihat gerak berhenti saat tombol dilepas.
+[ ] VIDEO_T06_04 — Continuous JOG Z+ dan Z-; terlihat gerak berhenti saat tombol dilepas.
+[ ] VIDEO_T06_05 — Tekan STOP saat robot bergerak dan tunjukkan robot berhenti.
+[ ] FOTO_T06_02 — Nilai kecepatan rendah yang digunakan saat pengujian.
+[ ] FOTO_T06_03 — Nilai kecepatan sedang/tinggi yang digunakan saat pengujian.
+[ ] VIDEO_T06_06 — SUCTION ON mengangkat benda ringan dengan aman.
+[ ] VIDEO_T06_07 — Pemindahan benda dan SUCTION OFF di posisi target.
+[ ] FOTO_T06_04 — Benda uji, posisi awal, dan posisi target.
+Tempat di laporan: Tugas 6; HOME, JOG, STOP, variasi kecepatan, dan suction cup.
+Keselamatan: Gunakan benda ringan, kosongkan area gerak, dan siapkan STOP. Jangan mendekatkan tangan ke area gerak robot.
+
+BUKTI UNTUK TABEL HASIL PENGUJIAN
+[ ] Foto/video hardware dan COM port untuk pemeriksaan hardware.
+[ ] Foto terminal receiver dan Flask untuk bukti server/backend.
+[ ] Foto dashboard smartphone untuk akses web dan monitoring.
+[ ] Video gerak robot untuk HOME, JOG, STOP, dan suction cup.
+[ ] Catat hasil aktual; jangan tandai OK jika pengujian belum dilakukan.
+
+DAFTAR FILE YANG TERKUMPUL
+No. | Nama file | Tugas | Keterangan | Dipakai di laporan? | Catatan
+01  |           |       |            |                     |
+02  |           |       |            |                     |
+03  |           |       |            |                     |
+04  |           |       |            |                     |
+05  |           |       |            |                     |
+06  |           |       |            |                     |
+07  |           |       |            |                     |
+08  |           |       |            |                     |
+09  |           |       |            |                     |
+10  |           |       |            |                     |
+
+SUSUNAN FOLDER YANG DISARANKAN
+Dokumentasi_Praktikum/
+  Foto/
+    Tugas_01_Hardware/
+    Tugas_02_SDK/
+    Tugas_03_Backend/
+    Tugas_04_Web/
+    Tugas_05_Integrasi/
+    Tugas_06_Operasi_Robot/
+  Video/
+    Tugas_01_Hardware/
+    Tugas_02_SDK/
+    Tugas_03_Backend/
+    Tugas_04_Web/
+    Tugas_05_Integrasi/
+    Tugas_06_Operasi_Robot/
+  Catatan_Pengujian/
+
+CATATAN PENYUSUNAN LAPORAN
+- Pilih bukti tajam, relevan, dan tidak berulang.
+- Tambahkan caption: nomor gambar, aktivitas, dan hasil yang terlihat.
+- Ambil frame penting dari video untuk laporan; simpan video asli sebagai bukti pendukung.
+- Samarkan wajah atau informasi pribadi jika tidak diperlukan.
+- Pastikan setiap foto/video mendukung klaim tertulis pada laporan.
