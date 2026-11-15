@@ -190,6 +190,53 @@ TUGAS 4. MENGAKSES ANTARMUKA WEB (FRONTEND)
    - Ketik alamat URL: http://192.168.0.161:5000
    - Tampilan Dashboard "DOBOT MAGICIAN - Continuous Jog Controller" berhasil dimuat.
 
+2. Akses melalui Internet (Cloudflare Tunnel):
+   - Jalankan server Flask dan pastikan layanan lokal tersedia pada port 5000.
+   - Cloudflare Tunnel meneruskan trafik dari hostname publik ke web server Flask.
+   - Buka browser pada perangkat yang terhubung ke internet; perangkat tidak perlu
+     berada pada jaringan Wi-Fi yang sama dengan laptop.
+   - Ketik alamat URL: https://dobot.teukuazharpasha.my.id
+   - Dashboard "DOBOT MAGICIAN - Continuous Jog Controller" dapat diakses melalui
+     internet menggunakan koneksi HTTPS.
+
+3. Identifikasi & Fungsi Komponen Antarmuka Web:
+   a. Status Badge (Header):
+      - Badge TCP: Indikator status socket Flask <-> dobot_tcp_receiver.py (ONLINE / OFFLINE).
+      - Badge Koneksi: Indikator status Dobot Magician (CONNECTED hijau / DISCONNECTED merah).
+   b. Panel Posisi Robot:
+      - Menampilkan pembacaan koordinat Kartesian X, Y, Z dalam satuan millimeter (mm) 
+        dan sudut rotasi end-effector R dalam satuan derajat (degree) secara real-time.
+   c. Pad Continuous JOG:
+      - Tombol X+ / X- : Menggerakkan robot maju / mundur pada sumbu Kartesian X.
+      - Tombol Y+ / Y- : Menggerakkan robot ke kiri / ke kanan pada sumbu Kartesian Y.
+      - Tombol Z+ / Z- : Menggerakkan robot naik / turun pada sumbu vertikal Z.
+      - Tombol STOP Pusat : Tombol darurat di tengah tombol panah untuk membatalkan gerakan seketika.
+      - Pola Operasi: Menggunakan Continuous Jog (Hold-to-move): Robot bergerak selama 
+        tombol ditekan (touchstart/mousedown) dan seketika berhenti saat dilepas (touchend/mouseup).
+   d. Panel Tombol Kontrol:
+      - CONNECT     : Membuka koneksi komunikasi serial ke Dobot Magician.
+      - DISCONNECT  : Memutus komunikasi serial dengan aman dan me-reset antrean instruksi.
+      - HOME        : Memulai siklus kalibrasi homing ke posisi referensi sensorik.
+      - STOP        : Mengirim instruksi darurat pemutus gerakan (JogIdle & ClearQueue).
+      - SUCTION ON  : Mengaktifkan katup pompa vakum udara penarik benda.
+      - SUCTION OFF : Mematikan pompa vakum dan melepaskan benda kerja.
+   e. Panel Kecepatan JOG (mm/s):
+      - Input field kecepatan untuk sumbu X, Y, dan Z (rentang 1 - 100 mm/s, default 5 mm/s).
+      - Tombol APPLY SPEED: Mengirimkan parameter kecepatan baru ke controller Dobot.
+   f. Panel Target Posisi Kartesian (PTP Move to XYZR):
+      - Input numerik presisi target koordinat X, Y, Z, R dilengkapi batas aman (Software Limits).
+      - Tombol MOVE TO XYZR untuk eksekusi pergerakan Point-to-Point halus.
+      - Tombol AMBIL POSISI SAAT INI untuk menyalin koordinat aktual ke form input.
+
+--------------------------------------------------------------------------------
+TUGAS 5. PENGUJIAN INTEGRASI DAN KONEKSI SISTEM
+--------------------------------------------------------------------------------
+1. Pengujian Tombol CONNECT:
+
+
+
+1. Pengujian Tombol CONNECT:
+1. Pengujian Tombol CONNECT:
 2. Identifikasi & Fungsi Komponen Antarmuka Web:
    a. Status Badge (Header):
       - Badge TCP: Indikator status socket Flask <-> dobot_tcp_receiver.py (ONLINE / OFFLINE).
